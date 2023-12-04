@@ -1,26 +1,22 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import Header from "../components/Header";
 
 
 const Picture: React.FC = () => {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Welcome to the Home page!</Text>
+            <Header />
+            <Text>Picture</Text>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center'
+      flex: 1,
+      backgroundColor: "#fff",
     },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold'
-    }
-});
+  });
 
 export default Picture;
