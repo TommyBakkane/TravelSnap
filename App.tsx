@@ -13,10 +13,6 @@ const Tab  = createBottomTabNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Login" component={Login} />
-        <Tab.Screen name="Picture" component={Picture} />
-        <Tab.Screen name="Profile" component={Profile}  />
        <Tab.Navigator
         screenOptions={{
           tabBarShowLabel: false,
