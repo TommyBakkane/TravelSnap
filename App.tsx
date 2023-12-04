@@ -5,12 +5,18 @@ import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Picture from './pages/Picture';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Login from './pages/Login';
+
 
 const Tab  = createBottomTabNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="Login" component={Login} />
+        <Tab.Screen name="Picture" component={Picture} />
+        <Tab.Screen name="Profile" component={Profile}  />
        <Tab.Navigator
         screenOptions={{
           tabBarShowLabel: false,
