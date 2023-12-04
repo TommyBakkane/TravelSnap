@@ -1,13 +1,16 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Header from "../components/Header";
+import UserInfo from "../components/user/UserInfo";
+import PostsGrid from "../components/user/PostsGrid";
 
 
 const Profile: React.FC = () => {
     return (
         <View style={styles.container}>
-          <Header />
-            <Text>Profile</Text>
+            <Header />
+            <UserInfo />
+            <PostsGrid />
         </View>
     );
 }
