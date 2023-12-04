@@ -6,7 +6,7 @@ import Header from "../components/Header";
 const Profile: React.FC = () => {
     return (
         <View style={styles.container}>
-            <Header />
+          <Header />
             <Text>Profile</Text>
         </View>
     );

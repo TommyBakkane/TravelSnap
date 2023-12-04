@@ -6,7 +6,7 @@ import Header from "../components/Header";
 const Picture: React.FC = () => {
     return (
         <View style={styles.container}>
-            <Header />
+          <Header />
             <Text>Picture</Text>
         </View>
     );

@@ -1,53 +1,26 @@
-import { StyleSheet} from 'react-native';
+import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from './pages/Home';
-import Profile from './pages/Profile';
-import Picture from './pages/Picture';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import AppNavigator from './Routes/AppNavigator';
 import Login from './pages/Login';
+import Header from './components/Header';
 
+const App: React.FC = () => {
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
-const Tab  = createBottomTabNavigator();
+  const handleSignInSuccess = () => {
+    setIsUserLoggedIn(true);
+  };
 
-export default function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Login" component={Login} />
-        <Tab.Screen name="Picture" component={Picture} />
-        <Tab.Screen name="Profile" component={Profile}  />
-       <Tab.Navigator
-        screenOptions={{
-          tabBarShowLabel: false,
-          headerShown: false,
-        }}
-      >
-        <Tab.Screen name="Home" component={Home} options={
-          {tabBarIcon: () => (
-            <Icon name="home" size={25} color="#000" />
-          )}
-        } />
-        <Tab.Screen name="Picture" component={Picture} options={
-          {tabBarIcon: () => (
-            <Icon name="camera" size={25} color="#000" />
-          )}
-        } />
-        <Tab.Screen name="Profile" component={Profile} options={
-          {tabBarIcon: () => (
-            <Icon name="user" size={25} color="#000" />
-          )}
-        } />
-      </Tab.Navigator>
-    </NavigationContainer> 
+      {isUserLoggedIn ? (
+        <AppNavigator />
+      ) : (
+        <Login onSignInSuccess={handleSignInSuccess} />
+      )}
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
+export default App;

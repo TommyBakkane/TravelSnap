@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput } from "react-native";
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Header from "../components/Header";
+import { View, StyleSheet } from "react-native";
 import Feed from "../components/Feed";
+import Header from "../components/Header";
 
 
 const Home: React.FC = () => {
-  return (
-    <View style={styles.container}>
-      <Header />
 
-      <Feed />
-    </View>
+  return (
+      <View style={styles.container}>
+          <Header />
+          <Feed />
+      </View>
+
   );
 };
 
