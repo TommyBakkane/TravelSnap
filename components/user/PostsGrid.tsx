@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, Image, FlatList, StyleSheet, ScrollView } from 'react-native';
 
 const GridPictures = () => {
-  // Sample data for the grid (replace with your actual picture URLs)
   const data = [
     { id: '1', uri: 'https://placekitten.com/200/200' },
     { id: '2', uri: 'https://placekitten.com/201/200' },
@@ -19,7 +18,6 @@ const GridPictures = () => {
     { id: '13', uri: 'https://placekitten.com/212/200' },
     { id: '14', uri: 'https://placekitten.com/213/200' },
     { id: '15', uri: 'https://placekitten.com/214/200' },
-    // Add more items as needed
   ];
 
   return (
