@@ -1,10 +1,13 @@
-import { View, Text, StyleSheet, TextInput, ActivityIndicator, Button, KeyboardAvoidingView } from 'react-native'
-import Reac, { useState } from 'react'
+import { View, StyleSheet, TextInput, ActivityIndicator, Button, KeyboardAvoidingView } from 'react-native'
+import React, { useState } from 'react'
 import { FIREBASE_AUTH } from '../config/firebase'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 
+export interface LoginProps {
+    onSignInSuccess: () => void
+}
 
-const Login = () => {
+const Login: React.FC<LoginProps> = ({ onSignInSuccess }) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
@@ -17,6 +20,7 @@ const Login = () => {
             const response = await signInWithEmailAndPassword(auth, email, password)
             console.log(response)
             setIsSignedIn(true)
+            onSignInSuccess();
         } catch (error: any) {
             console.log(error)
             alert('Sign in failed: ' + error.message)

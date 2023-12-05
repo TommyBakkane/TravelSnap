@@ -1,60 +1,77 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput } from "react-native";
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { collection, onSnapshot, getDocs } from '@firebase/firestore';
+import { FIRESTORE_DB } from '../config/firebase'; 
 
 interface Post {
-    id: string;
-    imageUrl: string;
-    caption: string;
-    likes: number;
-    dislikes: number;
-    comments: string[];
-    }
+  id: string;
+  image: string;
+  caption: string;
+  likes: number;
+  dislikes: number;
+  comments: string[];
+}
 
 const Feed: React.FC = () => {
-    const [posts, setPosts] = useState<Post[]>([
-        { id: '1', imageUrl: 'https://www.themealdb.com/images/media/meals/oe8rg51699014028.jpg', caption: 'Beautiful sunrise!', likes: 10, dislikes: 2, comments: ['Great pic!', 'Awesome!'] },
-        { id: '2', imageUrl: 'https://www.themealdb.com/images/media/meals/hqaejl1695738653.jpg', caption: 'Exploring nature!', likes: 15, dislikes: 1, comments: ['Beautiful!', 'Love it!'] },
+  const [posts, setPosts] = useState<Post[]>([]);
 
-      ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const postsCollection = collection(FIRESTORE_DB, 'posts');
+        const querySnapshot = await getDocs(postsCollection);
 
-      const handleLike = (postId: string) => {
-        setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === postId ? { ...post, likes: post.likes + 1 } : post
-          )
-        );
-      };
-    
-      const handleDislike = (postId: string) => {
-        setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === postId ? { ...post, dislikes: post.dislikes + 1 } : post
-          )
-        );
-      };
-    
-      const handleComment = (postId: string, comment: string) => {
-        setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === postId ? { ...post, comments: [...post.comments, comment] } : post
-          ));
-      };
-
-      const handleCommentPost = (postId: string, comment: string) => {
-        if (comment.trim() !== '') {
-            handleComment(postId, comment);
-        }
+        const fetchedPosts: Post[] = [];
+        querySnapshot.forEach((doc) => {
+          fetchedPosts.push({ id: doc.id, ...doc.data() } as Post);
+        });
+        setPosts(fetchedPosts);
+        console.log(fetchedPosts)
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    };
+    fetchData();
+  }, []);
+  
+    const handleLike = (postId: string) => {
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === postId ? { ...post, likes: post.likes + 1 } : post
+        )
+      );
     };
 
-  return (
-      <FlatList
-        data={posts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.container}>
+    const handleDislike = (postId: string) => {
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === postId ? { ...post, dislikes: post.dislikes + 1 } : post
+        )
+      );
+    };
 
-            <Image source={{ uri: item.imageUrl }} style={styles.image} />
+    const handleComment = (postId: string, comment: string) => {
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === postId ? { ...post, comments: [...post.comments, comment] } : post
+        ));
+    };
+
+    const handleCommentPost = (postId: string, comment: string) => {
+      if (comment.trim() !== '') {
+          handleComment(postId, comment);
+      }
+  };
+
+
+  return (
+    <FlatList
+      data={posts}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => (
+        <View style={styles.container}>
+          <Image source={{ uri: item.image }} style={styles.image} />
             <Text style={styles.caption}>{item.caption}</Text>
 
             <View style={styles.interactionsContainer}>
@@ -86,11 +103,13 @@ const Feed: React.FC = () => {
               }
               style={styles.commentInput}
             />
-          </View>
-        )}
-      />
+        </View>
+      )}
+    />
   );
 };
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -111,9 +130,6 @@ const styles = StyleSheet.create({
       marginHorizontal: 16,
       marginVertical: 8,
     },
-    icon: {
-      marginRight: 8,
-    },
     count: {
       fontSize: 16,
       marginHorizontal: 4,
@@ -128,6 +144,9 @@ const styles = StyleSheet.create({
       comment: {
         fontSize: 16,
         marginLeft: 16,
+      },
+      icon: {
+        fontSize: 16,
       },
     });
 
