@@ -7,7 +7,7 @@ const Picture: React.FC = () => {
     return (
         <View style={styles.container}>
           <Header />
-            <Text>Picture</Text>
+  
         </View>
     );
 }
