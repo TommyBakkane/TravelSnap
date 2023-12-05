@@ -6,6 +6,7 @@ import Profile from './pages/Profile';
 import Picture from './pages/Picture';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Login from './pages/Login';
+import CreatePost from './components/uploadPost/CreatePost';
 
 
 const Tab  = createBottomTabNavigator();
@@ -24,7 +25,7 @@ export default function App() {
             <Icon name="home" size={25} color="#000" />
           )}
         } />
-        <Tab.Screen name="Picture" component={Picture} options={
+        <Tab.Screen name="Upload" component={CreatePost} options={
           {tabBarIcon: () => (
             <Icon name="camera" size={25} color="#000" />
           )}
