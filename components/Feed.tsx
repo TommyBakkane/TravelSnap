@@ -111,9 +111,6 @@ const styles = StyleSheet.create({
       marginHorizontal: 16,
       marginVertical: 8,
     },
-    icon: {
-      marginRight: 8,
-    },
     count: {
       fontSize: 16,
       marginHorizontal: 4,
