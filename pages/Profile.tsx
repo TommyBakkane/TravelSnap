@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Header from "../components/Header";
 import UserInfo from "../components/user/UserInfo";
-import PostsGrid from "../components/user/PostsGrid";
+import ProfileGrid from "../components/user/ProfileGrid";
 
 
 const Profile: React.FC = () => {
@@ -10,7 +10,7 @@ const Profile: React.FC = () => {
         <View style={styles.container}>
             <Header />
             <UserInfo />
-            <PostsGrid />
+            <ProfileGrid/>
         </View>
     );
 }
