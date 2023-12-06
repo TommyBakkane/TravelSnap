@@ -1,7 +1,7 @@
 import { View, StyleSheet, TextInput, ActivityIndicator, Button, KeyboardAvoidingView } from 'react-native'
 import React, { useState } from 'react'
 import { FIREBASE_AUTH } from '../config/firebase'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, sendEmailVerification, getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 
 export interface LoginProps {
     onSignInSuccess: () => void
@@ -34,7 +34,9 @@ const Login: React.FC<LoginProps> = ({ onSignInSuccess }) => {
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password)
             console.log(response)
-            alert('Check your email for confirmation')
+            
+            const user = response.user;
+            await sendEmailVerification(user);
         } catch (error: any) {
             console.log(error)
             alert('Sign in failed: ' + error.message)

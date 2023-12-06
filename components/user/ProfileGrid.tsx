@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FIRESTORE_DB } from "../../config/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { ScrollView, View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
 
 interface Post {
@@ -15,18 +15,25 @@ const ProfileGrid = () => {
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchPosts = () => {
       try {
-        const postsCollection = collection(FIRESTORE_DB, "user-posts");
-        const postsSnapshot = await getDocs(postsCollection);
-        const postsData = postsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Post));
-        setPosts(postsData);
+        const postsCollection = collection(FIRESTORE_DB, 'user-posts');
+        const unsubscribe = onSnapshot(postsCollection, (snapshot) => {
+          const postsData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Post));
+          setPosts(postsData);
+        });
+  
+        return () => {
+          unsubscribe();
+        };
       } catch (error) {
-        console.error("Error fetching posts:", error);
+        console.error('Error fetching posts:', error);
       }
     };
+  
     fetchPosts();
-  }, []);
+  }, []); 
+  
 
   const renderPostItem = ({ item }: { item: Post }) => (
     <TouchableOpacity style={styles.gridItem}>
