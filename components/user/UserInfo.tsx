@@ -6,7 +6,7 @@ const TravelSnapUserProfile = () => {
     <View style={styles.container}>
       <View style={styles.profileInfo}>
         <Image
-          source={{ uri: 'https://placekitten.com/200/200' }} // Replace with the actual profile picture URL
+          source={{ uri: 'https://placekitten.com/200/200' }} 
           style={styles.profilePicture}
         />
         <View style={styles.userInfo}>
