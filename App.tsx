@@ -25,7 +25,7 @@ export default function App() {
 
       if (authUser && !authUser.emailVerified) {
         try {
-          // Send email verification
+
           await sendEmailVerification(authUser);
           Alert.alert(
             'Email Verification',
@@ -100,5 +100,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   }, 
 });
-
-export default App;
