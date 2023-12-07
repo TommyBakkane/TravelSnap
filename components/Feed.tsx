@@ -3,12 +3,9 @@ import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput } 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { FIRESTORE_DB } from '../config/firebase'; 
 import { Post } from '../interface/Post';
-import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion, arrayRemove, getDoc, increment, onSnapshot } from '@firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion, arrayRemove, getDoc, increment } from '@firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-<<<<<<< HEAD
-=======
 import FeedCard from './FeedCard';
->>>>>>> 1372d78 (up do date card, icon)
 
 const Feed: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
