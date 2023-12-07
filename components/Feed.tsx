@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { collection, onSnapshot, getDocs } from '@firebase/firestore';
 import { FIRESTORE_DB } from '../config/firebase'; 
 import { Post } from '../interface/Post';
-import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion, arrayRemove, getDoc, increment } from '@firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion, arrayRemove, getDoc, increment, onSnapshot } from '@firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import FeedCard from './FeedCard';
 
