@@ -2,14 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FIRESTORE_DB } from "../../config/firebase";
 import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { ScrollView, View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
-
-interface Post {
-  id: string;
-  title: string;
-  image: string;
-  timestamp: string;
-  description: string;
-}
+import { Post } from "../../interface/Post";
 
 const ProfileGrid = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -17,7 +10,7 @@ const ProfileGrid = () => {
   useEffect(() => {
     const fetchPosts = () => {
       try {
-        const postsCollection = collection(FIRESTORE_DB, 'user-posts');
+        const postsCollection = collection(FIRESTORE_DB, 'posts');
         const unsubscribe = onSnapshot(postsCollection, (snapshot) => {
           const postsData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Post));
           setPosts(postsData);
@@ -38,7 +31,6 @@ const ProfileGrid = () => {
   const renderPostItem = ({ item }: { item: Post }) => (
     <TouchableOpacity style={styles.gridItem}>
       <Image source={{ uri: item.image }} style={styles.image} />
-      <Text style={styles.title}>{item.title}</Text>
     </TouchableOpacity>
   );
 

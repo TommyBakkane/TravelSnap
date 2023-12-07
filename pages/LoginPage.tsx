@@ -7,7 +7,7 @@ export interface LoginProps {
     onSignInSuccess: () => void
 }
 
-const Login: React.FC<LoginProps> = ({ onSignInSuccess }) => {
+const LoginPage: React.FC<LoginProps> = ({ onSignInSuccess }) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
@@ -71,7 +71,7 @@ const Login: React.FC<LoginProps> = ({ onSignInSuccess }) => {
 
 }
 
-export default Login;
+export default LoginPage;
 
 const styles = StyleSheet.create({
     container: {

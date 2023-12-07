@@ -4,7 +4,7 @@ import Feed from "../components/Feed";
 import Header from "../components/Header";
 
 
-const Home: React.FC = () => {
+const DetailPage: React.FC = () => {
 
   return (
       <View style={styles.container}>
@@ -23,4 +23,4 @@ const styles = StyleSheet.create({
   });
   
 
-export default Home;
+export default DetailPage;

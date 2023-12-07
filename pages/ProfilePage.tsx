@@ -5,7 +5,7 @@ import UserInfo from "../components/user/UserInfo";
 import PostsGrid from "../components/user/ProfileGrid";
 
 
-const Profile: React.FC = () => {
+const ProfilePage: React.FC = () => {
     return (
         <View style={styles.container}>
             <Header />
@@ -29,4 +29,4 @@ const styles = StyleSheet.create({
     },
   });
 
-export default Profile;
+export default ProfilePage;

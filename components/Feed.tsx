@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { collection, onSnapshot, getDocs } from '@firebase/firestore';
 import { FIRESTORE_DB } from '../config/firebase'; 
-
-interface Post {
-  id: string;
-  image: string;
-  caption: string;
-  likes: number;
-  dislikes: number;
-  comments: string[];
-}
+import { Post } from '../interface/Post';
+import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion, arrayRemove, getDoc, increment } from '@firebase/firestore';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const Feed: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
+  const auth = getAuth();
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log('User is logged in:', user.uid);
+    } else {
+      console.log('User is logged out');
+    }
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,35 +36,100 @@ const Feed: React.FC = () => {
     };
     fetchData();
   }, []);
-  
-    const handleLike = (postId: string) => {
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post.id === postId ? { ...post, likes: post.likes + 1 } : post
-        )
-      );
-    };
 
-    const handleDislike = (postId: string) => {
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post.id === postId ? { ...post, dislikes: post.dislikes + 1 } : post
-        )
-      );
-    };
-
-    const handleComment = (postId: string, comment: string) => {
-      setPosts((prevPosts) =>
-        prevPosts.map((post) =>
-          post.id === postId ? { ...post, comments: [...post.comments, comment] } : post
-        ));
-    };
-
-    const handleCommentPost = (postId: string, comment: string) => {
-      if (comment.trim() !== '') {
-          handleComment(postId, comment);
-      }
+  const getCurrentUserId = () => {
+    const user = auth.currentUser;
+    return user ? user.uid : null;
   };
+
+
+
+  const handleLike = async (id: string) => {
+    try {
+      const postRef = doc(FIRESTORE_DB, 'posts', id);
+  
+      const currentUserId = getCurrentUserId();
+  
+      const postSnapshot = await getDoc(postRef);
+      const likedBy = postSnapshot.data()?.likedBy || [];
+  
+      if (likedBy.includes(currentUserId)) {
+        await updateDoc(postRef, {
+          likes: increment(-1),
+          likedBy: arrayRemove(currentUserId),
+        });
+      } else {
+        await updateDoc(postRef, {
+          likes: increment(1),
+          likedBy: arrayUnion(currentUserId),
+        });
+      }
+  
+      const updatedPostSnapshot = await getDoc(postRef);
+      const updatedPost = { id: updatedPostSnapshot.id, ...updatedPostSnapshot.data() } as Post;
+  
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === id ? updatedPost : post
+        )
+      );
+    } catch (error) {
+      console.error('Error handling like:', error);
+    }
+  };
+
+  const handleDislike = async (id: string) => {
+    try {
+      const post = doc(FIRESTORE_DB, 'posts', id);
+  
+      const currentUserId = getCurrentUserId();
+  
+      const postSnapshot = await getDoc(post);
+      const dislikedBy = postSnapshot.data()?.dislikedBy || [];
+  
+      if (dislikedBy.includes(currentUserId)) {
+        await updateDoc(post, {
+          dislikes: increment(-1),
+          dislikedBy: arrayRemove(currentUserId),
+        });
+      } else {
+        await updateDoc(post, {
+          dislikes: increment(1),
+          dislikedBy: arrayUnion(currentUserId),
+        });
+      }
+  
+      const updatedPostSnapshot = await getDoc(post);
+      const updatedPost = { id: updatedPostSnapshot.id, ...updatedPostSnapshot.data() } as Post;
+  
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === id ? updatedPost : post
+        )
+      );
+    } catch (error) {
+      console.error('Error handling like:', error);
+    }
+  };
+
+  const handleComment = async (id: string, comment: string) => {
+    try {
+      const postRef = doc(FIRESTORE_DB, 'posts', id);
+  
+      await updateDoc(postRef, {
+        comments: arrayUnion(comment),
+      });
+  
+      setPosts((post) =>
+        post.map((post) =>
+          post.id === id ? { ...post, comments: [...(post.comments || []), comment] } : post
+        )
+      );
+    } catch (error) {
+      console.error('Error adding comment:', error);
+    }
+  };
+  
 
 
   return (

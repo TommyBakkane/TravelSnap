@@ -1,13 +1,14 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Header from "../components/Header";
+import UploadPost from "../components/UploadPost";
 
 
-const Picture: React.FC = () => {
+const PicturePage: React.FC = () => {
     return (
         <View style={styles.container}>
           <Header />
-  
+          <UploadPost />
         </View>
     );
 }
@@ -19,4 +20,4 @@ const styles = StyleSheet.create({
     },
   });
 
-export default Picture;
+export default PicturePage;

@@ -1,7 +1,7 @@
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import Home from "../pages/Home";
-import Profile from "../pages/Profile";
-import Picture from "../pages/Picture";
+import HomePage from "../pages/HomePage";
+import ProfilePage from "../pages/ProfilePage";
+import PicturePage from "../pages/PicturePage";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Tab = createBottomTabNavigator();
@@ -14,17 +14,17 @@ const AppNavigator: React.FC = () => {
             headerShown: false,
         }}
         >
-        <Tab.Screen name="Home" component={Home} options={
+        <Tab.Screen name="Home" component={HomePage} options={
             {tabBarIcon: () => (
             <Icon name="home" size={25} color="#000" />
             )}
         } />
-        <Tab.Screen name="Picture" component={Picture} options={
+        <Tab.Screen name="Picture" component={PicturePage} options={
             {tabBarIcon: () => (
             <Icon name="camera" size={25} color="#000" />
             )}
         } />
-        <Tab.Screen name="Profile" component={Profile} options={
+        <Tab.Screen name="Profile" component={ProfilePage} options={
             {tabBarIcon: () => (
             <Icon name="user" size={25} color="#000" />
             )}
