@@ -5,6 +5,8 @@ import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'fire
 import { addDoc, collection } from 'firebase/firestore';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
+import * as Location from 'expo-location';
 
 const storage = getStorage(FIREBASE_APP);
 
@@ -12,15 +14,10 @@ const UploadPost = () => {
   const [caption, setCaption] = useState('');
   const [uploading, setUploading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Sorry, we need media library permissions to make this work.');
-      }
-    })();
-  }, []);
+  const auth = getAuth();
+  
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -53,27 +50,51 @@ const UploadPost = () => {
     setUploading(true);
   
     try {
-      const response = await fetch(selectedImage);
-      const blob = await response.blob();
-      const imageName = new Date().getTime().toString();
+      const { status } = await Location.requestForegroundPermissionsAsync();
   
-      const imageRef = storageRef(storage, `images/${imageName}`);
-      await uploadBytes(imageRef, blob);
+      if (status === 'granted') {
+        // Get the current location
+        const currentLocation = await Location.getCurrentPositionAsync({});
+        console.log(currentLocation);
   
-      const downloadURL = await getDownloadURL(imageRef);
+        const response = await fetch(selectedImage);
+        const blob = await response.blob();
+        const imageName = new Date().getTime().toString();
   
-      // Assuming you have a 'posts' collection in your Firestore database
-      const userPostsCollectionRef = collection(FIRESTORE_DB, 'posts');
-      const userPostsDocRef = await addDoc(userPostsCollectionRef, {
-        image: selectedImage,
-        caption,
-        likes: 0,
-        dislikes: 0,
-        comments: [],
-        timestamp: new Date().getTime(),
-      });
+        const imageRef = storageRef(storage, `images/${imageName}`);
+        await uploadBytes(imageRef, blob);
   
-      console.log('Post uploaded successfully:', downloadURL);
+        const downloadURL = await getDownloadURL(imageRef);
+  
+        // Ensure that location is defined and has the expected structure
+        const locationData =
+          currentLocation && currentLocation.coords
+            ? {
+                latitude: currentLocation.coords.latitude,
+                longitude: currentLocation.coords.longitude,
+              }
+            : null;
+  
+        if (locationData) {
+          const userPostsCollectionRef = collection(FIRESTORE_DB, 'posts');
+          const userPostsDocRef = await addDoc(userPostsCollectionRef, {
+            userId: auth?.currentUser?.displayName,
+            image: selectedImage,
+            caption,
+            likes: 0,
+            dislikes: 0,
+            comments: [],
+            location: locationData,
+          });
+  
+          console.log('Post uploaded successfully:', downloadURL);
+          console.log(userPostsDocRef);
+        } else {
+          console.log('Location data is undefined or has unexpected structure.');
+        }
+      } else {
+        console.log('Location permission denied');
+      }
     } catch (error) {
       console.error('Error uploading post:', error);
     } finally {

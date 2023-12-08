@@ -1,7 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { User } from 'firebase/auth';
 
-const TravelSnapUserProfile = () => {
+const UserInfo = () => {
+  const auth = getAuth();
+  const [user, setUser] = useState<User | null>(null);
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log(user);
+      setUser(user);
+    } else {
+      console.log('User is logged out');
+      setUser(null);
+    }
+  });
+
+
   return (
     <View style={styles.container}>
       <View style={styles.profileInfo}>
@@ -10,21 +26,13 @@ const TravelSnapUserProfile = () => {
           style={styles.profilePicture}
         />
         <View style={styles.userInfo}>
-          <Text style={styles.username}>john_doe123</Text>
+          <Text style={styles.username}>{user?.displayName}</Text>
         </View>
       </View>
       <View style={styles.statsGrid}>
         <View style={styles.statItem}>
           <Text style={styles.statNumber}>123</Text>
           <Text style={styles.statLabel}>Posts</Text>
-        </View>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>1,234</Text>
-          <Text style={styles.statLabel}>Followers</Text>
-        </View>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>567</Text>
-          <Text style={styles.statLabel}>Following</Text>
         </View>
       </View>
       <Text style={styles.biography}>
@@ -34,7 +42,7 @@ const TravelSnapUserProfile = () => {
       </Text>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -82,4 +90,4 @@ const styles = StyleSheet.create({
     },
   });
 
-export default TravelSnapUserProfile;
+export default UserInfo;
