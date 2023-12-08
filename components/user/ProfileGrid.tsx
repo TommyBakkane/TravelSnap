@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FIRESTORE_DB } from "../../config/firebase";
 import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { ScrollView, View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
-import { Post } from "../../interface/Post";
+import { Post } from "../../interface/Interfaces";
 
 const ProfileGrid = () => {
   const [posts, setPosts] = useState<Post[]>([]);

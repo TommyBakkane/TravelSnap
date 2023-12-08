@@ -7,8 +7,11 @@ export interface Post {
     likedBy: string[];
     dislikes: number;
     dislikedBy: string[];
-    comments: string[];
-    commentedBy: string[];
-    timestamp: Int16Array;
+    comments: Comment[];
     location: string;
   }
+
+export interface Comment{
+    comment:string;
+    user: string;
+}

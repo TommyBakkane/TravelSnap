@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { FIRESTORE_DB } from '../config/firebase'; 
-import { Post } from '../interface/Post';
+import { Post, Comment } from '../interface/Interfaces';
 import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion, arrayRemove, getDoc, increment } from '@firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
@@ -37,9 +37,9 @@ const Feed: React.FC = () => {
     fetchData();
   }, []);
 
-  const getCurrentUserId = () => {
+  const getCurrentUser = () => {
     const user = auth.currentUser;
-    return user ? user.uid : null;
+    return user ? user.displayName : null;
   };
 
 
@@ -48,20 +48,20 @@ const Feed: React.FC = () => {
     try {
       const postRef = doc(FIRESTORE_DB, 'posts', id);
   
-      const currentUserId = getCurrentUserId();
+      const currentUser = getCurrentUser();
   
       const postSnapshot = await getDoc(postRef);
       const likedBy = postSnapshot.data()?.likedBy || [];
   
-      if (likedBy.includes(currentUserId)) {
+      if (likedBy.includes(currentUser)) {
         await updateDoc(postRef, {
           likes: increment(-1),
-          likedBy: arrayRemove(currentUserId),
+          likedBy: arrayRemove(currentUser),
         });
       } else {
         await updateDoc(postRef, {
           likes: increment(1),
-          likedBy: arrayUnion(currentUserId),
+          likedBy: arrayUnion(currentUser),
         });
       }
   
@@ -82,20 +82,20 @@ const Feed: React.FC = () => {
     try {
       const post = doc(FIRESTORE_DB, 'posts', id);
   
-      const currentUserId = getCurrentUserId();
+      const currentUser = getCurrentUser();
   
       const postSnapshot = await getDoc(post);
       const dislikedBy = postSnapshot.data()?.dislikedBy || [];
   
-      if (dislikedBy.includes(currentUserId)) {
+      if (dislikedBy.includes(currentUser)) {
         await updateDoc(post, {
           dislikes: increment(-1),
-          dislikedBy: arrayRemove(currentUserId),
+          dislikedBy: arrayRemove(currentUser),
         });
       } else {
         await updateDoc(post, {
           dislikes: increment(1),
-          dislikedBy: arrayUnion(currentUserId),
+          dislikedBy: arrayUnion(currentUser),
         });
       }
   
@@ -112,24 +112,34 @@ const Feed: React.FC = () => {
     }
   };
 
-  const handleComment = async (id: string, comment: string) => {
+  const handleComment = async (id: string, commentText: string) => {
     try {
       const postRef = doc(FIRESTORE_DB, 'posts', id);
   
-      await updateDoc(postRef, {
-        comments: arrayUnion(comment),
-      });
+      const currentUser = getCurrentUser();
   
-      setPosts((post) =>
-        post.map((post) =>
-          post.id === id ? { ...post, comments: [...(post.comments || []), comment] } : post
-        )
-      );
+      if (currentUser) {
+        const newComment: Comment = {
+          comment: commentText,
+          user: currentUser,
+        };
+  
+        await updateDoc(postRef, {
+          comments: arrayUnion(newComment),
+        });
+  
+        setPosts((prevPosts) =>
+          prevPosts.map((post) =>
+            post.id === id ? { ...post, comments: [...post.comments, newComment] } : post
+          )
+        );
+      } else {
+        console.log('User not authenticated');
+      }
     } catch (error) {
       console.error('Error adding comment:', error);
     }
   };
-  
 
 
   return (
@@ -157,24 +167,27 @@ const Feed: React.FC = () => {
 
             <FlatList
               data={item.comments}
-              keyExtractor={(comment, index) => index.toString()}
+              keyExtractor={(comment) => comment.comment}
               renderItem={({ item: comment }) => (
-                <Text style={styles.comment}>{comment}</Text>
+                <View>
+                  <Text>{comment.user}</Text>
+                  <Text>{comment.comment}</Text>
+                </View>
               )}
             />
 
-            <TextInput
-              placeholder="Add a comment..."
-              onSubmitEditing={({ nativeEvent }) =>
-                handleComment(item.id, nativeEvent.text)
-              }
-              style={styles.commentInput}
-            />
-        </View>
-      )}
-    />
-  );
-};
+        <TextInput
+          placeholder="Add a comment..."
+          onSubmitEditing={({ nativeEvent }) =>
+            handleComment(item.id, nativeEvent.text)
+          }
+          style={styles.commentInput}
+        />
+      </View>
+    )}
+  />
+);
+}
 
 
 
