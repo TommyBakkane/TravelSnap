@@ -12,6 +12,7 @@ export interface Post {
   }
 
 export interface Comment{
+    commentId: string;
     comment:string;
     user: string;
 }

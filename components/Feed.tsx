@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { FIRESTORE_DB } from '../config/firebase'; 
+import { FIRESTORE_DB } from '../config/firebase';
 import { Post, Comment } from '../interface/Interfaces';
-import { collection, addDoc, getDocs, updateDoc, doc, arrayUnion, arrayRemove, getDoc, increment } from '@firebase/firestore';
+import { collection, updateDoc, doc, arrayUnion, arrayRemove, getDoc, increment, onSnapshot, FieldValue } from '@firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const Feed: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [commentText, setCommentText] = useState('');
   const auth = getAuth();
 
   onAuthStateChanged(auth, (user) => {
@@ -19,22 +20,17 @@ const Feed: React.FC = () => {
   });
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const postsCollection = collection(FIRESTORE_DB, 'posts');
-        const querySnapshot = await getDocs(postsCollection);
+    const unsubscribe = onSnapshot(collection(FIRESTORE_DB, 'posts'), (snapshot) => {
+      const posts: Post[] = [];
 
-        const fetchedPosts: Post[] = [];
-        querySnapshot.forEach((doc) => {
-          fetchedPosts.push({ id: doc.id, ...doc.data() } as Post);
-        });
-        setPosts(fetchedPosts);
-        console.log(fetchedPosts)
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-      }
-    };
-    fetchData();
+      snapshot.forEach((doc) => {
+        posts.push({ id: doc.id, ...doc.data() } as Post);
+      });
+
+      setPosts(posts);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const getCurrentUser = () => {
@@ -120,6 +116,7 @@ const Feed: React.FC = () => {
   
       if (currentUser) {
         const newComment: Comment = {
+          commentId: crypto.randomUUID(),
           comment: commentText,
           user: currentUser,
         };
@@ -128,16 +125,40 @@ const Feed: React.FC = () => {
           comments: arrayUnion(newComment),
         });
   
-        setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === id ? { ...post, comments: [...post.comments, newComment] } : post
-          )
-        );
+        // No need to manually update local state here, let onSnapshot handle it
+  
+        setCommentText('');
       } else {
         console.log('User not authenticated');
       }
     } catch (error) {
       console.error('Error adding comment:', error);
+    }
+  };
+
+  const handleDeleteComment = async (postId: string, commentId: string) => {
+    try {
+      const postRef = doc(FIRESTORE_DB, 'posts', postId);
+  
+      const postSnapshot = await getDoc(postRef);
+      const existingComments = postSnapshot.data()?.comments || [];
+  
+      const updatedComments = existingComments.filter((comment: { commentId: string; }) => comment.commentId !== commentId);
+  
+      await updateDoc(postRef, { comments: updatedComments });
+  
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === postId
+            ? {
+                ...post,
+                comments: updatedComments,
+              }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error('Error deleting comment:', error);
     }
   };
 
@@ -169,20 +190,28 @@ const Feed: React.FC = () => {
               data={item.comments}
               keyExtractor={(comment) => comment.comment}
               renderItem={({ item: comment }) => (
-                <View>
-                  <Text>{comment.user}</Text>
-                  <Text>{comment.comment}</Text>
+                <View style={styles.commentContainer}>
+                  <Text style={styles.commentUser}>{comment.user}:</Text>
+                  <Text style={styles.commentText}>{comment.comment}</Text>
+                  {comment.user === getCurrentUser() && (
+                    <TouchableOpacity onPress={() => handleDeleteComment(item.id, comment.commentId)}>
+                      <Icon name="trash" size={20} color="red" style={styles.icon} />
+                    </TouchableOpacity>
+                  )}
                 </View>
               )}
             />
 
-        <TextInput
-          placeholder="Add a comment..."
-          onSubmitEditing={({ nativeEvent }) =>
-            handleComment(item.id, nativeEvent.text)
-          }
-          style={styles.commentInput}
-        />
+            <TextInput
+              placeholder="Add a comment..."
+              value={commentText}
+              onChangeText={(text) => setCommentText(text)}
+              onSubmitEditing={() => {
+                handleComment(item.id, commentText);
+                setCommentText(''); 
+              }}
+              style={styles.commentInput}
+            />
       </View>
     )}
   />
@@ -221,12 +250,22 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         fontSize: 16,
       },
-      comment: {
-        fontSize: 16,
-        marginLeft: 16,
-      },
       icon: {
         fontSize: 16,
+        marginEnd: 16,
+      },
+      commentContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 8,
+        marginLeft: 16,
+      },
+      commentUser: {
+        fontWeight: 'bold',
+        marginRight: 8,
+      },
+      commentText: {
+        flex: 1,
       },
     });
 
