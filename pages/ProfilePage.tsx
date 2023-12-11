@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import Header from "../components/Header";
 import UserInfo from "../components/user/UserInfo";
 import PostsGrid from "../components/user/ProfileGrid";
+import SignOut from "../components/SignOut";
 
 
 const ProfilePage: React.FC = () => {
@@ -11,6 +12,7 @@ const ProfilePage: React.FC = () => {
             <Header />
             <UserInfo />
             <PostsGrid />
+            <SignOut />
         </View>
     );
 }
@@ -25,7 +27,7 @@ const styles = StyleSheet.create({
     },
     postImage: {
       width: '100%',
-      aspectRatio: 1, // Maintain aspect ratio
+      aspectRatio: 1,
     },
   });
 

@@ -21,7 +21,6 @@ const Settings: React.FC = () => {
     });
 
     return () => {
-      // Unsubscribe when the component unmounts
       unsubscribe();
     };
   }, [auth]);
@@ -31,14 +30,13 @@ const Settings: React.FC = () => {
   const handleUpdateProfile = async () => {
     try {
       if (newUsername.trim() !== '') {
-        await updateProfile(auth.user, { displayName: newUsername });
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+          await updateProfile(currentUser, { displayName: newUsername } as any);
+        }
       }
-
-      // Reset the form fields
       setNewUsername('');
-
-      // Refresh the user information
-      setUser(auth.user);
+      setUser(auth.currentUser);
     } catch (error) {
       console.error('Error updating profile:', error);
     }

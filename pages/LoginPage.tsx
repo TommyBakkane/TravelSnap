@@ -4,13 +4,11 @@ import { FIREBASE_AUTH } from '../config/firebase'
 import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile, signInWithEmailAndPassword  } from 'firebase/auth';
 import { doc, getFirestore, getDoc } from 'firebase/firestore';
 import SignUp from '../components/SignUp';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
-export interface LoginProps {
-    onSignInSuccess: () => void
-}
 
-const LoginPage: React.FC<LoginProps> = ({ onSignInSuccess }) => {
+
+
+const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -24,34 +22,12 @@ const LoginPage: React.FC<LoginProps> = ({ onSignInSuccess }) => {
     };
 
 
-    const signUp = async () => {
-        setLoading(true);
-        try {
-            const response = await createUserWithEmailAndPassword(auth, email, password);
-            const user = response.user;
-    
-            // Update user profile with the username
-            await updateProfile(user, {
-                displayName: username,
-            });
-    
-            // Send email verification
-            await sendEmailVerification(user);
-        } catch (error: any) {
-            console.log(error);
-            alert('Sign up failed: ' + error.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const signIn = async () => {
         setLoading(true);
         try {
             const response = await signInWithEmailAndPassword(auth, email, password);
             const user = response.user;
-    
-            // Fetch additional user information from Firestore
+
             const userDocRef = doc(getFirestore(), 'users', user.uid);
             const userDoc = await getDoc(userDocRef);
     
@@ -59,11 +35,10 @@ const LoginPage: React.FC<LoginProps> = ({ onSignInSuccess }) => {
                 const userData = userDoc.data();
                 const retrievedUsername = userData.username;
                 console.log('Username:', retrievedUsername);
-                setUsername(retrievedUsername); // Set the username in your component state
+                setUsername(retrievedUsername); 
             }
     
             setIsSignedIn(true);
-            onSignInSuccess();
         } catch (error: any) {
             console.log(error);
             alert('Sign in failed: ' + error.message);
@@ -85,9 +60,12 @@ const LoginPage: React.FC<LoginProps> = ({ onSignInSuccess }) => {
                 ) : (
                     <>
                         <View style={styles.buttonContainer}>
-                            <Button title="Sign In" onPress={signIn} />
-                            <TouchableOpacity onPress={toggleSignUpModal}>
-                                <Icon name="cog" size={25} color="#000" />
+                            <TouchableOpacity style={styles.button} onPress={signIn}>
+                            <Text style={styles.buttonText}>Login</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.button} onPress={toggleSignUpModal}>
+                            <Text style={styles.buttonText}>Sign Up</Text>
                             </TouchableOpacity>
                         </View>
                         <Modal
@@ -156,5 +134,16 @@ const styles = StyleSheet.create({
       closeButtonText: {
         color: 'blue',
         fontSize: 16,
+      },
+      button: {
+        backgroundColor: 'blue',
+        padding: 10,
+        borderRadius: 5,
+        marginBottom: 10,
+      },
+      buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
       },
 });
