@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button, Image, Pressable } from 'react-native';
 import { getAuth, onAuthStateChanged, updateProfile, User } from 'firebase/auth';
 import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL as getDownloadURLStorage } from 'firebase/storage';
 
@@ -57,9 +57,9 @@ const Settings: React.FC = () => {
 
           <View style={styles.avatarContainer}>
             {avatarUrl && <Image source={{ uri: avatarUrl }} style={styles.avatar} />}
-            <TouchableOpacity >
+            <Pressable >
               <Text style={styles.uploadText}>Upload Avatar</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
 
           

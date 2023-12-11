@@ -3,6 +3,7 @@ import { FIRESTORE_DB } from "../../config/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 import { FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Post } from "../../interface/Interfaces";
+import { Pressable } from "react-native";
 
 const ProfileGrid = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -29,9 +30,9 @@ const ProfileGrid = () => {
   
 
   const renderPostItem = ({ item }: { item: Post }) => (
-    <TouchableOpacity style={styles.gridItem}>
+    <Pressable style={styles.gridItem}>
       <Image source={{ uri: item.image }} style={styles.image} />
-    </TouchableOpacity>
+    </Pressable>
   );
 
   return (

@@ -12,7 +12,6 @@ const ProfilePage: React.FC = () => {
             <Header />
             <UserInfo />
             <PostsGrid />
-            <SignOut />
         </View>
     );
 }

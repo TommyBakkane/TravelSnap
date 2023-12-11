@@ -1,7 +1,7 @@
-import { View, StyleSheet, TextInput, ActivityIndicator, Button, KeyboardAvoidingView, Modal, TouchableOpacity, Text } from 'react-native'
+import { View, StyleSheet, TextInput, ActivityIndicator, KeyboardAvoidingView, Modal, Pressable, Text } from 'react-native'
 import React, { useState } from 'react'
 import { FIREBASE_AUTH } from '../config/firebase'
-import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile, signInWithEmailAndPassword  } from 'firebase/auth';
+import { signInWithEmailAndPassword  } from 'firebase/auth';
 import { doc, getFirestore, getDoc } from 'firebase/firestore';
 import SignUp from '../components/SignUp';
 
@@ -60,13 +60,13 @@ const LoginPage: React.FC = () => {
                 ) : (
                     <>
                         <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button} onPress={signIn}>
+                            <Pressable style={styles.button} onPress={signIn}>
                             <Text style={styles.buttonText}>Login</Text>
-                            </TouchableOpacity>
+                            </Pressable>
 
-                            <TouchableOpacity style={styles.button} onPress={toggleSignUpModal}>
+                            <Pressable style={styles.button} onPress={toggleSignUpModal}>
                             <Text style={styles.buttonText}>Sign Up</Text>
-                            </TouchableOpacity>
+                            </Pressable>
                         </View>
                         <Modal
                             animationType="slide"
@@ -77,9 +77,9 @@ const LoginPage: React.FC = () => {
                             <View style={styles.modalContainer}>
                             <View style={styles.modalContent}>
                                 <SignUp />
-                                <TouchableOpacity onPress={toggleSignUpModal} style={styles.closeButton}>
+                                <Pressable onPress={toggleSignUpModal} style={styles.closeButton}>
                                 <Text style={styles.closeButtonText}>Close</Text>
-                                </TouchableOpacity>
+                                </Pressable>
                             </View>
                             </View>
                         </Modal>

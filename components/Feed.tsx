@@ -1,23 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, TextInput, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { FIRESTORE_DB } from '../config/firebase';
 import { Post, Comment } from '../interface/Interfaces';
-import { collection, updateDoc, doc, arrayUnion, arrayRemove, getDoc, increment, onSnapshot, FieldValue } from '@firebase/firestore';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { collection, updateDoc, doc, arrayUnion, arrayRemove, getDoc, increment, onSnapshot } from '@firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const Feed: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [commentText, setCommentText] = useState('');
   const auth = getAuth();
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log('User is logged in:', user);
-    } else {
-      console.log('User is logged out');
-    }
-  });
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(FIRESTORE_DB, 'posts'), (snapshot) => {
@@ -125,8 +117,6 @@ const Feed: React.FC = () => {
           comments: arrayUnion(newComment),
         });
   
-        // No need to manually update local state here, let onSnapshot handle it
-  
         setCommentText('');
       } else {
         console.log('User not authenticated');
@@ -174,13 +164,13 @@ const Feed: React.FC = () => {
 
             <View style={styles.interactionsContainer}>
 
-              <TouchableOpacity onPress={() => handleLike(item.id)}>
+              <Pressable onPress={() => handleLike(item.id)}>
                 <Icon name="thumbs-up" size={25} color="#000" style={styles.icon} />
-              </TouchableOpacity>
+              </Pressable>
               <Text style={styles.count}>{item.likes}</Text>
-              <TouchableOpacity onPress={() => handleDislike(item.id)}>
+              <Pressable onPress={() => handleDislike(item.id)}>
                 <Icon name="thumbs-down" size={25} color="#000" style={styles.icon} />
-              </TouchableOpacity>
+              </Pressable>
               <Text style={styles.count}>{item.dislikes}</Text>
             </View>
 
@@ -194,9 +184,9 @@ const Feed: React.FC = () => {
                   <Text style={styles.commentUser}>{comment.user}:</Text>
                   <Text style={styles.commentText}>{comment.comment}</Text>
                   {comment.user === getCurrentUser() && (
-                    <TouchableOpacity onPress={() => handleDeleteComment(item.id, comment.commentId)}>
+                    <Pressable onPress={() => handleDeleteComment(item.id, comment.commentId)}>
                       <Icon name="trash" size={20} color="red" style={styles.icon} />
-                    </TouchableOpacity>
+                    </Pressable>
                   )}
                 </View>
               )}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Image } from 'react-native';
 import { FIREBASE_APP, FIRESTORE_DB } from '../config/firebase';
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getStorage} from 'firebase/storage';
 import { addDoc, collection } from 'firebase/firestore';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -75,17 +75,6 @@ const UploadPost = () => {
 
       if (status === 'granted') {
         const currentLocation = await Location.getCurrentPositionAsync({});
-        console.log(currentLocation);
-
-        const response = await fetch(selectedImage);
-        const blob = await response.blob();
-        const imageName = new Date().getTime().toString();
-
-        const imageRef = storageRef(storage, `images/${imageName}`);
-        await uploadBytes(imageRef, blob);
-
-        const downloadURL = await getDownloadURL(imageRef);
-
 
         const locationData =
           currentLocation && currentLocation.coords
@@ -106,9 +95,6 @@ const UploadPost = () => {
             comments: [],
             location: locationData,
           });
-
-          console.log('Post uploaded successfully:', downloadURL);
-          console.log(userPostsDocRef);
         } else {
           console.log('Location data is undefined or has unexpected structure.');
         }
