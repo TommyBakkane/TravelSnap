@@ -13,7 +13,7 @@ const Feed: React.FC = () => {
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      console.log('User is logged in:', user.uid, user.displayName);
+      console.log('User is logged in:', user);
     } else {
       console.log('User is logged out');
     }

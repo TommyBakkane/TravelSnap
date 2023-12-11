@@ -27,6 +27,7 @@
     "react-native-uuid": "^2.0.1",
     "react-native-vector-icons": "^10.0.2",
     "react-native-web": "~0.19.6",
+    "react-navigation": "^5.0.0",
     "urid": "^1.1.0"
   },
   "devDependencies": {
