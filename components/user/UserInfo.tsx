@@ -3,14 +3,12 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, Modal } from 'react-na
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { User } from 'firebase/auth';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
-import SettingsPage from '../../pages/SettingsPage';
+import Settings from '../Settings';
 
 const UserInfo = () => {
   const auth = getAuth();
   const [user, setUser] = useState<User | null>(null);
   const [isSettingsModalVisible, setSettingsModalVisible] = useState(false);
-  const navigation = useNavigation();
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -60,7 +58,7 @@ const UserInfo = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <SettingsPage />
+            <Settings />
             <TouchableOpacity onPress={toggleSettingsModal} style={styles.closeButton}>
               <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>

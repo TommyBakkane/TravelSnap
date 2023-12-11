@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput, Button, Image, TouchableOpacity } fr
 import { getAuth, onAuthStateChanged, updateProfile, User } from 'firebase/auth';
 import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL as getDownloadURLStorage } from 'firebase/storage';
 
-const SettingsPage: React.FC = () => {
+const Settings: React.FC = () => {
   const auth = getAuth();
   const storage = getStorage();
   const [user, setUser] = useState<User | null>(null);
@@ -111,4 +111,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SettingsPage;
+export default Settings;

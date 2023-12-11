@@ -1,8 +1,10 @@
-import { View, StyleSheet, TextInput, ActivityIndicator, Button, KeyboardAvoidingView } from 'react-native'
+import { View, StyleSheet, TextInput, ActivityIndicator, Button, KeyboardAvoidingView, Modal, TouchableOpacity, Text } from 'react-native'
 import React, { useState } from 'react'
 import { FIREBASE_AUTH } from '../config/firebase'
 import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile, signInWithEmailAndPassword  } from 'firebase/auth';
 import { doc, getFirestore, getDoc } from 'firebase/firestore';
+import SignUp from '../components/SignUp';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export interface LoginProps {
     onSignInSuccess: () => void
@@ -15,6 +17,11 @@ const LoginPage: React.FC<LoginProps> = ({ onSignInSuccess }) => {
     const [loading, setLoading] = useState(false)
     const auth = FIREBASE_AUTH;
     const [isSignedIn, setIsSignedIn] = useState(false)
+    const [isSignUpModalVisible, setSignUpModalVisible] = useState(false);
+
+    const toggleSignUpModal = () => {
+        setSignUpModalVisible(!isSignUpModalVisible);
+    };
 
 
     const signUp = async () => {
@@ -71,7 +78,6 @@ const LoginPage: React.FC<LoginProps> = ({ onSignInSuccess }) => {
         <View style={styles.container}>
             <KeyboardAvoidingView behavior="padding">
                 <TextInput value={email} style={styles.input} placeholder="Email" autoCapitalize="none" onChangeText={(text) => setEmail(text)}></TextInput>
-                <TextInput value={username} style={styles.input} placeholder="Username" autoCapitalize="none" onChangeText={(text) => setUsername(text)}></TextInput>
                 <TextInput value={password} style={styles.input} placeholder="Password" autoCapitalize="none" onChangeText={(text) => setPassword(text)} secureTextEntry={true}></TextInput>
 
                 {loading ? (
@@ -80,10 +86,25 @@ const LoginPage: React.FC<LoginProps> = ({ onSignInSuccess }) => {
                     <>
                         <View style={styles.buttonContainer}>
                             <Button title="Sign In" onPress={signIn} />
+                            <TouchableOpacity onPress={toggleSignUpModal}>
+                                <Icon name="cog" size={25} color="#000" />
+                            </TouchableOpacity>
                         </View>
-                        <View style={styles.buttonContainer}>
-                            <Button title="Create account" onPress={signUp} />
-                        </View>
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={isSignUpModalVisible}
+                            onRequestClose={toggleSignUpModal}
+                        >
+                            <View style={styles.modalContainer}>
+                            <View style={styles.modalContent}>
+                                <SignUp />
+                                <TouchableOpacity onPress={toggleSignUpModal} style={styles.closeButton}>
+                                <Text style={styles.closeButtonText}>Close</Text>
+                                </TouchableOpacity>
+                            </View>
+                            </View>
+                        </Modal>
                     </>
                 )}
             </KeyboardAvoidingView>
@@ -115,5 +136,25 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         marginTop: 10,
-    }
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      },
+      modalContent: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        width: '80%',
+      },
+      closeButton: {
+        marginTop: 10,
+        alignSelf: 'flex-end',
+      },
+      closeButtonText: {
+        color: 'blue',
+        fontSize: 16,
+      },
 });
