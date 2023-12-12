@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
       borderRadius: 4,
       padding: 10,
       backgroundColor: '#fff',
-      width: '80%', // Adjust the width as needed
+      width: '80%',
     },
     buttonContainer: {
       marginTop: 20,
