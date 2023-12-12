@@ -25,32 +25,31 @@ const UserInfo = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.profileInfo}>
-      <Image
-        source={{ uri: user?.photoURL || '' }}
-        style={styles.profilePicture}
-      />
+      <View style={styles.itemContainer}>
+        <Image
+          source={{ uri: user?.photoURL || '' }}
+          style={styles.profilePicture}
+        />
+      </View>
+
+      <View style={styles.spacing} />
+
+      <View style={styles.itemContainer}>
         <View style={styles.userInfo}>
-          <Text style={styles.username}>{user?.displayName}</Text>
-        </View>
-        <Pressable onPress={toggleSettingsModal}>
-          <Icon name="cog" size={25} color="#000" style={styles.icon} />
-        </Pressable>
-      </View>
-      <View style={styles.statsGrid}>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>123</Text>
-          <Text style={styles.statLabel}>Posts</Text>
-        </View>
-        <View style={styles.statItem}>
-          <SignOut />
+          <Text style={styles.usernameText}>{user?.displayName}</Text>
+          <Pressable onPress={toggleSettingsModal}>
+            <Icon name="cog" size={25} color="#000" style={styles.icon} />
+          </Pressable>
         </View>
       </View>
-      <Text style={styles.biography}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce vel
-        consectetur mauris. Integer commodo facilisis felis, non aliquam turpis
-        euismod in.
-      </Text>
+
+      <View style={styles.spacing} />
+
+      <View style={styles.itemContainer}>
+        <SignOut />
+      </View>
+
+      <View style={styles.spacing} />
 
       <Modal
         animationType="slide"
@@ -72,72 +71,58 @@ const UserInfo = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-      padding: 16,
-    },
-    profileInfo: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-    },
-    userInfo: {
-      flex: 1,
-    },
-    username: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      marginBottom: 4,
-      padding: 20,
-    },
-    profilePicture: {
-      width: 80,
-      height: 80,
-      borderRadius: 40,
-      marginLeft: 16,
-    },
-    statsGrid: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      marginTop: 16,
-    },
-    statItem: {
-      alignItems: 'center',
-    },
-    statNumber: {
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    statLabel: {
-      color: '#666',
-    },
-    biography: {
-      marginTop: 16,
-      fontSize: 16,
-      lineHeight: 22,
-    },
-    icon: {
-      marginLeft: 16,
-    },
-    modalContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalContent: {
-      backgroundColor: 'white',
-      padding: 20,
-      borderRadius: 10,
-      width: '80%',
-    },
-    closeButton: {
-      marginTop: 10,
-      alignSelf: 'flex-end',
-    },
-    closeButtonText: {
-      color: 'blue',
-      fontSize: 16,
-    },
-  });
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
+  itemContainer: {
+    marginBottom: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profilePicture: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+  },
+  userInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  usernameText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginVertical: 8,
+  },
+  icon: {
+    marginLeft: 16,
+  },
+  spacing: {
+    height: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    height: '50%',
+  },
+  closeButton: {
+    marginTop: 10,
+    alignSelf: 'flex-end',
+  },
+  closeButtonText: {
+    color: 'blue',
+    fontSize: 16,
+  },
+});
 
 export default UserInfo;
