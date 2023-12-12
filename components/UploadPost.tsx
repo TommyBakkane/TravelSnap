@@ -17,6 +17,13 @@ const UploadPost = () => {
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
 
   const auth = getAuth();
+  
+  const capitalizeFirstLetter = (text: string) => {
+    return text
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -108,6 +115,7 @@ const UploadPost = () => {
     }
   };
 
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Upload a Post</Text>
@@ -116,7 +124,7 @@ const UploadPost = () => {
         style={styles.input}
         placeholder="Title"
         value={caption}
-        onChangeText={(text) => setCaption(text)}
+        onChangeText={(text) => setCaption(capitalizeFirstLetter(text))}
       />
 
       {selectedImage && <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200, marginBottom: 12 }} />}
@@ -147,7 +155,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center', 
   },
   heading: {
     fontSize: 24,
@@ -167,7 +175,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
-    width: '80%',
+    width: '80%', 
     marginTop: 12, 
   },
   uploadButtonText: {
@@ -179,8 +187,8 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
-    width: '80%',
-    marginTop: 12,
+    width: '80%', 
+    marginTop: 12, 
   },
   pickImageButtonText: {
     color: 'white',

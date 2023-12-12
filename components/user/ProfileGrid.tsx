@@ -1,39 +1,64 @@
 import React, { useEffect, useState } from "react";
-import { FIRESTORE_DB } from "../../config/firebase";
-import { collection, onSnapshot } from "firebase/firestore";
-import { FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { collection, onSnapshot, QuerySnapshot, DocumentData, where, query } from "firebase/firestore";
+import { FlatList, Image, StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { Post } from "../../interface/Interfaces";
-import { Pressable } from "react-native";
+import { FIRESTORE_DB } from "../../config/firebase";
 
-const ProfileGrid = () => {
+interface ProfileGridProps {
+  userId: string;
+}
+
+const ProfileGrid: React.FC<ProfileGridProps> = ({ userId }) => {
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
-    const fetchPosts = () => {
+    const fetchPosts = async () => {
       try {
-        const postsCollection = collection(FIRESTORE_DB, 'posts');
-        const unsubscribe = onSnapshot(postsCollection, (snapshot) => {
+        console.log("userId:", userId);
+        if (!userId) {
+          console.error("userId is undefined");
+          return;
+        }
+    
+        const postsCollection = collection(FIRESTORE_DB, "posts");
+        const q = query(postsCollection, where("userId", "==", userId));
+    
+        const unsubscribe = onSnapshot(q, (snapshot: QuerySnapshot<DocumentData>) => {
           const postsData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Post));
+          console.log("Fetched Posts:", postsData);
           setPosts(postsData);
+        }, (error) => {
+          console.error("Error fetching posts:", error);
         });
-  
+    
         return () => {
           unsubscribe();
         };
       } catch (error) {
-        console.error('Error fetching posts:', error);
+        console.error("Error in fetchPosts:", error);
       }
     };
-  
+
     fetchPosts();
-  }, []); 
-  
+  }, [userId]);
 
   const renderPostItem = ({ item }: { item: Post }) => (
-    <Pressable style={styles.gridItem}>
-      <Image source={{ uri: item.image }} style={styles.image} />
-    </Pressable>
+    <TouchableOpacity style={styles.gridItem}>
+      <Image
+        source={{ uri: item.image }}
+        style={styles.image}
+        onError={(error) => console.error("Error loading image:", error)}
+      />
+    </TouchableOpacity>
   );
+
+  if (!userId) {
+    return (
+      <View style={styles.container}>
+        <Text>User ID is undefined</Text>
+      </View>
+    );
+  }
 
   return (
     <FlatList
@@ -47,6 +72,11 @@ const ProfileGrid = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   gridContainer: {
     padding: 4,
   },
