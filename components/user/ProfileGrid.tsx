@@ -14,7 +14,7 @@ const ProfileGrid: React.FC<ProfileGridProps> = ({ userId }) => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        console.log("userId:", userId); // Log userId
+        console.log("userId:", userId);
         if (!userId) {
           console.error("userId is undefined");
           return;

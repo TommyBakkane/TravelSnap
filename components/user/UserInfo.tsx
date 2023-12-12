@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable, Modal } from 'react-native';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { User } from 'firebase/auth';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Settings from '../Settings';
+import SignOut from '../SignOut';
 
 const UserInfo = () => {
   const auth = getAuth();
@@ -12,10 +13,8 @@ const UserInfo = () => {
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      console.log(user);
       setUser(user);
     } else {
-      console.log('User is logged out');
       setUser(null);
     }
   });
@@ -34,14 +33,17 @@ const UserInfo = () => {
         <View style={styles.userInfo}>
           <Text style={styles.username}>{user?.displayName}</Text>
         </View>
-        <TouchableOpacity onPress={toggleSettingsModal}>
+        <Pressable onPress={toggleSettingsModal}>
           <Icon name="cog" size={25} color="#000" style={styles.icon} />
-        </TouchableOpacity>
+        </Pressable>
       </View>
       <View style={styles.statsGrid}>
         <View style={styles.statItem}>
           <Text style={styles.statNumber}>123</Text>
           <Text style={styles.statLabel}>Posts</Text>
+        </View>
+        <View style={styles.statItem}>
+          <SignOut />
         </View>
       </View>
       <Text style={styles.biography}>
@@ -59,9 +61,9 @@ const UserInfo = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Settings />
-            <TouchableOpacity onPress={toggleSettingsModal} style={styles.closeButton}>
+            <Pressable onPress={toggleSettingsModal} style={styles.closeButton}>
               <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
       </Modal>

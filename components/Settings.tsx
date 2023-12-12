@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button, Image, Pressable } from 'react-native';
 import { getAuth, onAuthStateChanged, updateProfile, User } from 'firebase/auth';
 import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL as getDownloadURLStorage } from 'firebase/storage';
 
@@ -21,7 +21,6 @@ const Settings: React.FC = () => {
     });
 
     return () => {
-      // Unsubscribe when the component unmounts
       unsubscribe();
     };
   }, [auth]);
@@ -31,14 +30,13 @@ const Settings: React.FC = () => {
   const handleUpdateProfile = async () => {
     try {
       if (newUsername.trim() !== '') {
-        await updateProfile(auth.user, { displayName: newUsername });
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+          await updateProfile(currentUser, { displayName: newUsername } as any);
+        }
       }
-
-      // Reset the form fields
       setNewUsername('');
-
-      // Refresh the user information
-      setUser(auth.user);
+      setUser(auth.currentUser);
     } catch (error) {
       console.error('Error updating profile:', error);
     }
@@ -59,9 +57,9 @@ const Settings: React.FC = () => {
 
           <View style={styles.avatarContainer}>
             {avatarUrl && <Image source={{ uri: avatarUrl }} style={styles.avatar} />}
-            <TouchableOpacity >
+            <Pressable >
               <Text style={styles.uploadText}>Upload Avatar</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
 
           

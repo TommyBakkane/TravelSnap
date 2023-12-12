@@ -18,13 +18,9 @@ const SignUp: React.FC = ({  }) => {
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password);
             const user = response.user;
-    
-            // Update user profile with the username
             await updateProfile(user, {
                 displayName: username,
             });
-    
-            // Send email verification
             await sendEmailVerification(user);
         } catch (error: any) {
             console.log(error);
