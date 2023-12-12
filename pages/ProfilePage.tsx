@@ -1,9 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Header from "../components/Header";
-import UserInfo from "../components/user/UserInfo";
-import PostsGrid from "../components/user/ProfileGrid";
-import SignOut from "../components/SignOut";
+import UserInfo from "../components/UserInfo";
 
 
 const ProfilePage: React.FC = () => {
@@ -11,7 +9,6 @@ const ProfilePage: React.FC = () => {
         <View style={styles.container}>
             <Header />
             <UserInfo />
-            <PostsGrid />
         </View>
     );
 }

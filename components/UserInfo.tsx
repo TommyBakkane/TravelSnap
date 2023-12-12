@@ -3,8 +3,8 @@ import { View, Text, Image, StyleSheet, Pressable, Modal } from 'react-native';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { User } from 'firebase/auth';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Settings from '../Settings';
-import SignOut from '../SignOut';
+import Settings from './Settings';
+import SignOut from './SignOut';
 
 const UserInfo = () => {
   const auth = getAuth();
