@@ -9,7 +9,7 @@ import SignOut from '../SignOut';
 const UserInfo = () => {
   const auth = getAuth();
   const [user, setUser] = useState<User | null>(null);
-  const [isSettingsModalVisible, setSettingsModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -20,16 +20,16 @@ const UserInfo = () => {
   });
 
   const toggleSettingsModal = () => {
-    setSettingsModalVisible(!isSettingsModalVisible);
+    setModalVisible(!modalVisible);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.profileInfo}>
-        <Image
-          source={{ uri: 'https://placekitten.com/200/200' }}
-          style={styles.profilePicture}
-        />
+      <Image
+        source={{ uri: user?.photoURL || '' }}
+        style={styles.profilePicture}
+      />
         <View style={styles.userInfo}>
           <Text style={styles.username}>{user?.displayName}</Text>
         </View>
@@ -55,12 +55,12 @@ const UserInfo = () => {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={isSettingsModalVisible}
+        visible={modalVisible}
         onRequestClose={toggleSettingsModal}
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Settings />
+          <Settings onClose={() => setModalVisible(false)} />
             <Pressable onPress={toggleSettingsModal} style={styles.closeButton}>
               <Text style={styles.closeButtonText}>Close</Text>
             </Pressable>

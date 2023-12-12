@@ -2,10 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Button, Image, Pressable } from 'react-native';
 import { getAuth, onAuthStateChanged, updateProfile, User } from 'firebase/auth';
 import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL as getDownloadURLStorage } from 'firebase/storage';
+import * as ImagePicker from 'expo-image-picker';
 
-const Settings: React.FC = () => {
+interface SettingsProps {
+  onClose: () => void;
+}
+const Settings: React.FC<SettingsProps> = ({ onClose }) => {
+  
   const auth = getAuth();
   const storage = getStorage();
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [newUsername, setNewUsername] = useState<string>('');
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -25,18 +31,56 @@ const Settings: React.FC = () => {
     };
   }, [auth]);
 
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
   
-
+    if (!result.canceled) {
+      try {
+        const response = await fetch(result.assets[0].uri);
+        const blob = await response.blob();
+  
+        // Upload the image to Firebase Storage
+        const storage = getStorage();
+        const reference = storageRef(storage, `avatars/${auth.currentUser?.uid}`);
+        const uploadTask = uploadBytesResumable(reference, blob);
+  
+        // Get the download URL once the upload is complete
+        uploadTask.on('state_changed', null, null, async () => {
+          const downloadURL = await getDownloadURLStorage(reference);
+          setAvatarUrl(downloadURL);
+        });
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
+    }
+  };
+  
   const handleUpdateProfile = async () => {
     try {
-      if (newUsername.trim() !== '') {
+      if (newUsername.trim() !== '' || avatarUrl) {
         const currentUser = auth.currentUser;
+  
+        // Check if currentUser is not null before proceeding
         if (currentUser) {
-          await updateProfile(currentUser, { displayName: newUsername } as any);
+          // Update the display name if provided
+          if (newUsername.trim() !== '') {
+            await updateProfile(currentUser, { displayName: newUsername } as any);
+          }
+  
+          // Update the photoURL with the download URL from Firebase Storage
+          if (avatarUrl) {
+            await updateProfile(currentUser, { photoURL: avatarUrl } as any);
+          }
+  
+          setNewUsername('');
+          setUser(currentUser);
         }
       }
-      setNewUsername('');
-      setUser(auth.currentUser);
+      onClose();
     } catch (error) {
       console.error('Error updating profile:', error);
     }
@@ -48,7 +92,7 @@ const Settings: React.FC = () => {
 
       {user && (
         <View>
-            <TextInput
+          <TextInput
             placeholder="Enter new name"
             value={newUsername}
             onChangeText={(text) => setNewUsername(text)}
@@ -56,13 +100,15 @@ const Settings: React.FC = () => {
           />
 
           <View style={styles.avatarContainer}>
-            {avatarUrl && <Image source={{ uri: avatarUrl }} style={styles.avatar} />}
-            <Pressable >
+            {selectedImage ? (
+              <Image source={{ uri: selectedImage }} style={styles.avatar} />
+            ) : (
+              avatarUrl && <Image source={{ uri: avatarUrl }} style={styles.avatar} />
+            )}
+            <Pressable onPress={pickImage}>
               <Text style={styles.uploadText}>Upload Avatar</Text>
             </Pressable>
           </View>
-
-          
 
           <Button title="Update Profile" onPress={handleUpdateProfile} />
         </View>
@@ -70,6 +116,7 @@ const Settings: React.FC = () => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
