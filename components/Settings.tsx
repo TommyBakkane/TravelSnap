@@ -8,7 +8,7 @@ interface SettingsProps {
   onClose: () => void;
 }
 const Settings: React.FC<SettingsProps> = ({ onClose }) => {
-  
+
   const auth = getAuth();
   const storage = getStorage();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -42,13 +42,11 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
       try {
         const response = await fetch(result.assets[0].uri);
         const blob = await response.blob();
-  
-        // Upload the image to Firebase Storage
+
         const storage = getStorage();
         const reference = storageRef(storage, `avatars/${auth.currentUser?.uid}`);
         const uploadTask = uploadBytesResumable(reference, blob);
   
-        // Get the download URL once the upload is complete
         uploadTask.on('state_changed', null, null, async () => {
           const downloadURL = await getDownloadURLStorage(reference);
           setAvatarUrl(downloadURL);
@@ -64,14 +62,11 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
       if (newUsername.trim() !== '' || avatarUrl) {
         const currentUser = auth.currentUser;
   
-        // Check if currentUser is not null before proceeding
         if (currentUser) {
-          // Update the display name if provided
           if (newUsername.trim() !== '') {
             await updateProfile(currentUser, { displayName: newUsername } as any);
           }
   
-          // Update the photoURL with the download URL from Firebase Storage
           if (avatarUrl) {
             await updateProfile(currentUser, { photoURL: avatarUrl } as any);
           }
