@@ -14,7 +14,8 @@ const DetailPage: React.FC = () => {
       <Text style={styles.caption}>{post.caption}</Text>
       <Image source={{ uri: post.image }} style={styles.image} />
 
-        <MapView
+      {/* this code doesnt work on web*/}
+      <MapView
             style={styles.map}
             initialRegion={{
             latitude: post.location.latitude,
@@ -40,9 +41,8 @@ const styles = StyleSheet.create({
       padding: 16,
     },
     caption: {
-      fontSize: 32,
+      fontSize: 18,
       fontWeight: 'bold',
-      textAlign: 'center',
       marginBottom: 12,
     },
     image: {

@@ -11,14 +11,13 @@ const Search = () => {
   const [itemWidth, setItemWidth] = useState(0);
   const navigation = useNavigation();
 
- // this was used to help with the grid layout, but after making changes to the layout, I believe we can delete this. Will test when product is working agian.
+
   useEffect(() => {
     const screenWidth = Dimensions.get('window').width;
     const padding = 16;
     setItemWidth(screenWidth - padding * 2);
   }, []);
 
-  //this is to ensure that the first letter of the search query is capitalized for formatting purposes
   const capitalizeFirstLetter = (text: string) => {
     return text
       .split(' ')
@@ -26,7 +25,6 @@ const Search = () => {
       .join(' ');
   };
 
-  //this is the function that will search the database for the search query and return the results
   const handleSearch = async () => {
     try {
       const postsCollectionRef = collection(FIRESTORE_DB, 'posts');
@@ -47,14 +45,12 @@ const Search = () => {
     }
   };
 
-  //this is the function that will handle the image press and navigate to the details page
   const handleImagePress = (post: Post) => {
     navigation.navigate('Details', {
       post,
     });
   };
 
-  //this is the function that will render the grid item. Also believe this can be removed due to changes in layout. Will test when product is working agian.
   const renderGridItem: React.FC<{ item: Post }> = ({ item }) => (
     <View style={{ ...styles.itemContainer, width: itemWidth }}>
       <Pressable onPress={() => handleImagePress(item)}>
@@ -84,8 +80,6 @@ const Search = () => {
     </View>
   );
 };
-
-//styling for search page component
 
 const styles = StyleSheet.create({
   container: {

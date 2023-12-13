@@ -1,7 +1,7 @@
 import { View, StyleSheet, TextInput, ActivityIndicator, Button, KeyboardAvoidingView } from 'react-native'
 import React, { useState } from 'react'
 import { FIREBASE_AUTH } from '../config/firebase'
-import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile, signInWithEmailAndPassword  } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile  } from 'firebase/auth';
 
 
 const SignUp: React.FC = ({  }) => {
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     title: {
         fontSize: 24,

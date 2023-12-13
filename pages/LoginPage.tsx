@@ -35,7 +35,6 @@ const LoginPage: React.FC = () => {
             if (userDoc.exists()) {
                 const userData = userDoc.data();
                 const retrievedUsername = userData.username;
-                console.log('Username:', retrievedUsername);
                 setUsername(retrievedUsername); 
             }
     
@@ -122,6 +121,7 @@ const styles = StyleSheet.create({
       modalContent: {
         backgroundColor: 'white',
         padding: 20,
+        height: '50%',
         borderRadius: 10,
         width: '80%',
       },

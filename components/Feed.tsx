@@ -7,6 +7,7 @@ import { collection, updateDoc, doc, arrayUnion, arrayRemove, getDoc, increment,
 import { getAuth } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 
+
 const Feed: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [commentText, setCommentText] = useState('');
@@ -113,8 +114,14 @@ const Feed: React.FC = () => {
       const currentUser = getCurrentUser();
   
       if (currentUser) {
+        // Check if the commentText is not empty or only contains whitespace
+        if (commentText.trim() === '') {
+          console.log('Comment cannot be empty');
+          return; // Exit the function if the comment is empty
+        }
+  
         const newComment: Comment = {
-          commentId: crypto.randomUUID(),
+          commentId: Date.now() + '_' + Math.floor(Math.random() * 1000),
           comment: commentText,
           user: currentUser,
         };

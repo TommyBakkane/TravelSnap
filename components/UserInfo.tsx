@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     width: '80%',
-    height: '100%',
+    height: '80%',
   },
   closeButton: {
     marginTop: 10,
