@@ -5,11 +5,13 @@ import { FIRESTORE_DB } from '../config/firebase';
 import { Post, Comment } from '../interface/Interfaces';
 import { collection, updateDoc, doc, arrayUnion, arrayRemove, getDoc, increment, onSnapshot } from '@firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import { useNavigation } from '@react-navigation/native';
 
 const Feed: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [commentText, setCommentText] = useState('');
   const auth = getAuth();
+  const navigation = useNavigation();
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(FIRESTORE_DB, 'posts'), (snapshot) => {
@@ -152,6 +154,13 @@ const Feed: React.FC = () => {
     }
   };
 
+ 
+  const handleImagePress = (post: Post) => {
+    navigation.navigate('Details', {
+      post,
+    });
+  };
+
 
   return (
     <FlatList
@@ -159,7 +168,9 @@ const Feed: React.FC = () => {
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
         <View style={styles.container}>
-          <Image source={{ uri: item.image }} style={styles.image} />
+          <Pressable onPress={() => handleImagePress(item)}>
+            <Image source={{ uri: item.image }} style={styles.image} />
+          </Pressable>
             <Text style={styles.caption}>{item.caption}</Text>
 
             <View style={styles.interactionsContainer}>

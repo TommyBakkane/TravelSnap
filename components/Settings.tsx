@@ -94,14 +94,14 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
           />
 
           <View style={styles.imageContainer}>
+          <Pressable onPress={pickImage}>
+              <Text style={styles.button}>Upload Avatar</Text>
+            </Pressable>
             {selectedImage ? (
               <Image source={{ uri: selectedImage }} style={styles.image} />
             ) : (
               avatarUrl && <Image source={{ uri: avatarUrl }} style={styles.image} />
             )}
-            <Pressable onPress={pickImage}>
-              <Text style={styles.button}>Upload Avatar</Text>
-            </Pressable>
           </View>
 
           <Pressable onPress={handleUpdateProfile} >
@@ -118,12 +118,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 16,
+    justifyContent: 'center',
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 16,
     textAlign: 'center',
   },
   imageContainer: {
@@ -137,9 +136,9 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   button: {
-    color: 'white',
-    fontSize: 16,
-    padding: 8,
+    color: '#fff',
+    fontSize: 18,
+    padding: 12,
     borderRadius: 8,
     backgroundColor: '#3498db',
     textAlign: 'center',
@@ -151,12 +150,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingHorizontal: 8,
     paddingVertical: 8,
-    fontSize: 16,
-  },
-  infoText: {
-    marginTop: 16,
-    color: '#888',
+    fontSize: 18,
   },
 });
-
 export default Settings;

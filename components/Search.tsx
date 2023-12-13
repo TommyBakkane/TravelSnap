@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, FlatList, Text, Image, Dimensions, StyleSheet } from 'react-native';
+import { View, TextInput, Button, FlatList, Image, Dimensions, StyleSheet, Pressable } from 'react-native';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { FIRESTORE_DB } from '../config/firebase';
-
-interface Post {
-  id: string;
-  caption: string;
-  image: string;
-}
+import { useNavigation } from '@react-navigation/native';
+import { Post } from '../interface/Interfaces';
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Post[]>([]);
   const [itemWidth, setItemWidth] = useState(0);
+  const navigation = useNavigation();
+
 
   useEffect(() => {
     const screenWidth = Dimensions.get('window').width;
@@ -38,11 +36,7 @@ const Search = () => {
 
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        results.push({
-          id: doc.id,
-          caption: data.caption,
-          image: data.image,
-        });
+        results.push({ id: doc.id, ...data } as Post);
       });
 
       setSearchResults(results);
@@ -51,10 +45,17 @@ const Search = () => {
     }
   };
 
+  const handleImagePress = (post: Post) => {
+    navigation.navigate('Details', {
+      post,
+    });
+  };
+
   const renderGridItem: React.FC<{ item: Post }> = ({ item }) => (
     <View style={{ ...styles.itemContainer, width: itemWidth }}>
-      <Image source={{ uri: item.image }} style={styles.itemImage} resizeMode="cover" />
-      <Text style={styles.itemCaption}>{item.caption}</Text>
+      <Pressable onPress={() => handleImagePress(item)}>
+            <Image source={{ uri: item.image }} style={styles.image} />
+          </Pressable>
     </View>
   );
 
@@ -62,7 +63,7 @@ const Search = () => {
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Search for a city"
+        placeholder="Search..."
         value={searchQuery}
         onChangeText={(text) => setSearchQuery(capitalizeFirstLetter(text))}
       />
@@ -84,6 +85,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+  },
+  image: {
+    width: '100%',
+    aspectRatio: 1,
   },
   input: {
     height: 40,

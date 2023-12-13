@@ -8,8 +8,11 @@ export interface Post {
     dislikes: number;
     dislikedBy: string[];
     comments: Comment[];
-    location: string;
-  }
+    location: {
+      latitude: number;
+      longitude: number;
+    };
+  };
 
 export interface Comment{
     commentId: string;
