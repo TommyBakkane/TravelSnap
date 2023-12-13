@@ -15,6 +15,8 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
   const [newUsername, setNewUsername] = useState<string>('');
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
+
+  // this code is used to get the current user's name and avatar
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -30,6 +32,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
     };
   }, [auth]);
 
+  // this lets the user pick an image from their phone and add it as an avatar
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -56,6 +59,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
     }
   };
   
+  //this code is used to update the user's profile based on user inputs
   const handleUpdateProfile = async () => {
     try {
       if (newUsername.trim() !== '' || avatarUrl) {

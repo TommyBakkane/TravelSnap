@@ -13,6 +13,7 @@ const Feed: React.FC = () => {
   const auth = getAuth();
   const navigation = useNavigation();
 
+  //this code is used to get the posts from the database
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(FIRESTORE_DB, 'posts'), (snapshot) => {
       const posts: Post[] = [];
@@ -27,13 +28,14 @@ const Feed: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
+  // this code is used to get the current user's name
   const getCurrentUser = () => {
     const user = auth.currentUser;
     return user ? user.displayName : null;
   };
 
 
-
+ //this function makes it so that when the user presses the like button, the like count goes up by on, and when they press it again, it goes down by one
   const handleLike = async (id: string) => {
     try {
       const postRef = doc(FIRESTORE_DB, 'posts', id);
@@ -68,6 +70,7 @@ const Feed: React.FC = () => {
     }
   };
 
+  //this function makes it so that when the user presses the dislike button, the dislike count goes up by on, and when they press it again, it goes down by one
   const handleDislike = async (id: string) => {
     try {
       const post = doc(FIRESTORE_DB, 'posts', id);
@@ -102,6 +105,7 @@ const Feed: React.FC = () => {
     }
   };
 
+  //this function allows the user to add a comment to a post
   const handleComment = async (id: string, commentText: string) => {
     try {
       const postRef = doc(FIRESTORE_DB, 'posts', id);
@@ -128,6 +132,7 @@ const Feed: React.FC = () => {
     }
   };
 
+  //this function allows the user to delete their own comments
   const handleDeleteComment = async (postId: string, commentId: string) => {
     try {
       const postRef = doc(FIRESTORE_DB, 'posts', postId);
@@ -154,7 +159,7 @@ const Feed: React.FC = () => {
     }
   };
 
- 
+  //this function allows the user to navigate to the details page when they press on an image, this code gives an error, but it still works
   const handleImagePress = (post: Post) => {
     navigation.navigate('Details', {
       post,

@@ -17,11 +17,12 @@ const LoginPage: React.FC = () => {
     const [isSignedIn, setIsSignedIn] = useState(false)
     const [isSignUpModalVisible, setSignUpModalVisible] = useState(false);
 
+    //Shows a popup when the user hits the signup button
     const toggleSignUpModal = () => {
         setSignUpModalVisible(!isSignUpModalVisible);
     };
 
-
+    // this code lets the user sign in for the app with email and password.
     const signIn = async () => {
         setLoading(true);
         try {

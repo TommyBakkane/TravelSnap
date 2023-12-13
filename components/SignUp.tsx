@@ -12,7 +12,7 @@ const SignUp: React.FC = ({  }) => {
     const auth = FIREBASE_AUTH;
 
 
-
+    // this code lets the user sign up for the app with username email and password. And sends an email verification to the user
     const signUp = async () => {
         setLoading(true);
         try {

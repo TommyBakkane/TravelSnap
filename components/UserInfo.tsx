@@ -11,6 +11,7 @@ const UserInfo = () => {
   const [user, setUser] = useState<User | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
 
+  // this code is used to get the current user's information
   onAuthStateChanged(auth, (user) => {
     if (user) {
       setUser(user);
@@ -19,6 +20,7 @@ const UserInfo = () => {
     }
   });
 
+  //this code is used to toggle the settings modal on and off.
   const toggleSettingsModal = () => {
     setModalVisible(!modalVisible);
   };

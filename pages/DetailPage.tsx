@@ -14,7 +14,6 @@ const DetailPage: React.FC = () => {
       <Text style={styles.caption}>{post.caption}</Text>
       <Image source={{ uri: post.image }} style={styles.image} />
 
-      {/* Display Map */}
         <MapView
             style={styles.map}
             initialRegion={{

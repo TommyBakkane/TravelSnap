@@ -24,6 +24,7 @@ const UploadPost = () => {
       .join(' ');
   };
 
+  //this lets the user pcik an image from their phone
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -46,6 +47,7 @@ const UploadPost = () => {
     }
   };
 
+  //this lets the user take a picture with their phone
   const takePicture = async () => {
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -68,6 +70,7 @@ const UploadPost = () => {
     }
   };
 
+  //this code uploads the post to the database
   const uploadPost = async () => {
     if (!selectedImage) {
       console.log('Please select an image first.');

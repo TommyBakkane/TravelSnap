@@ -8,6 +8,8 @@ import SearchPage from "../pages/SearchPage";
 const Tab = createBottomTabNavigator();
 
 const AppNavigator: React.FC = () => {
+
+    //this is the bottom navigator with icons
     return (
         <Tab.Navigator
         screenOptions={{

@@ -11,6 +11,8 @@ import DetailPage from '../pages/DetailPage';
 const Stack = createStackNavigator();
 
 const NavigationStack: React.FC = () => {
+
+  // this handles the navigation for the app that dosent use the bottom navigation
     const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {

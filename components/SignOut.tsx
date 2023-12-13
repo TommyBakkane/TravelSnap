@@ -4,6 +4,7 @@ import { getAuth, signOut } from 'firebase/auth';
 
 const SignOut = () => {
 
+  //this code lets the user sign out for the app
 const handleSignOut = async () => {
     const auth = getAuth();
 
