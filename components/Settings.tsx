@@ -54,7 +54,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
           setAvatarUrl(downloadURL);
         });
       } catch (error) {
-        console.error('Error uploading image:', error);
+        console.log(error);
       }
     }
   };
@@ -80,7 +80,7 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
       }
       onClose();
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.log(error);
     }
   };
 

@@ -11,13 +11,15 @@ const Search = () => {
   const [itemWidth, setItemWidth] = useState(0);
   const navigation = useNavigation();
 
-
+  //this code is used to get the width of the screen
   useEffect(() => {
     const screenWidth = Dimensions.get('window').width;
     const padding = 16;
     setItemWidth(screenWidth - padding * 2);
   }, []);
 
+
+  //this code is used to capitalize the first letter of each word in the search query
   const capitalizeFirstLetter = (text: string) => {
     return text
       .split(' ')
@@ -25,6 +27,7 @@ const Search = () => {
       .join(' ');
   };
 
+  //this code is used to search for posts
   const handleSearch = async () => {
     try {
       const postsCollectionRef = collection(FIRESTORE_DB, 'posts');
@@ -41,10 +44,11 @@ const Search = () => {
 
       setSearchResults(results);
     } catch (error) {
-      console.error('Error searching posts:', error);
+      console.log(error);
     }
   };
 
+  //sends the user to a detailpage of the post they clicked on
   const handleImagePress = (post: Post) => {
     navigation.navigate('Details', {
       post,
@@ -71,7 +75,7 @@ const Search = () => {
 
       {searchResults.length > 0 && (
         <FlatList
-          style={styles.flatListContainer}
+          style={styles.listContainer}
           data={searchResults}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <>{renderGridItem({ item })}</>}
@@ -97,7 +101,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingLeft: 8,
   },
-  flatListContainer: {
+  listContainer: {
     flex: 1,
   },
   itemContainer: {
@@ -107,15 +111,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 10,
     marginBottom: 8, 
-  },
-  itemImage: {
-    width: '100%',
-    height: 200, 
-    borderRadius: 8,
-  },
-  itemCaption: {
-    padding: 4,
-    textAlign: 'center',
   },
 });
 

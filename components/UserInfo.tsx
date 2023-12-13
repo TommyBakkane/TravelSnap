@@ -30,7 +30,7 @@ const UserInfo = () => {
       <View style={styles.userInfo}>
         <Image
           source={{ uri: user?.photoURL || '' }}
-          style={styles.profilePicture}
+          style={styles.avatar}
         />
         <Text style={styles.username}>{user?.displayName}</Text>
       </View>
@@ -53,8 +53,9 @@ const UserInfo = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
           <Settings onClose={() => setModalVisible(false)} />
-            <Pressable onPress={toggleSettingsModal} style={styles.closeButton}>
-            </Pressable>
+          <Pressable onPress={toggleSettingsModal} style={styles.closeButton}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </Pressable>
           </View>
         </View>
       </Modal>
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  profilePicture: {
+  avatar: {
     width: 120,
     height: 120,
     borderRadius: 60,
@@ -111,12 +112,6 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: 'blue',
     fontSize: 16,
-  },
-  setting: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    textAlign: 'center',
   },
 });
 

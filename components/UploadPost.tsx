@@ -73,7 +73,7 @@ const UploadPost = () => {
   //this code uploads the post to the database
   const uploadPost = async () => {
     if (!selectedImage) {
-      console.log('Please select an image first.');
+      alert('Please select an image');
       return;
     }
 
@@ -104,14 +104,12 @@ const UploadPost = () => {
             comments: [],
             location: locationData,
           });
-        } else {
-          console.log('Location data is undefined or has unexpected structure.');
-        }
+        } 
       } else {
         console.log('Location permission denied');
       }
     } catch (error) {
-      console.error('Error uploading post:', error);
+      console.log(error);
     } finally {
       setUploading(false);
     }
@@ -120,7 +118,7 @@ const UploadPost = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Upload a Post</Text>
+      <Text style={styles.title}>Upload a Post</Text>
 
       <TextInput
         style={styles.input}
@@ -132,12 +130,12 @@ const UploadPost = () => {
       {selectedImage && <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200, marginBottom: 12 }} />}
 
       <View style={styles.buttonContainer}>
-      <Pressable style={styles.pickImageButton} onPress={pickImage}>
-        <Text style={styles.pickImageButtonText}>Pick an Image</Text>
+      <Pressable style={styles.imageButton} onPress={pickImage}>
+        <Text style={styles.buttonText}>Pick an Image</Text>
       </Pressable>
 
-      <Pressable style={styles.pickImageButton} onPress={takePicture}>
-        <Text style={styles.pickImageButtonText}>Take a Picture</Text>
+      <Pressable style={styles.imageButton} onPress={takePicture}>
+        <Text style={styles.buttonText}>Take a Picture</Text>
       </Pressable>
       </View>
 
@@ -146,7 +144,7 @@ const UploadPost = () => {
         onPress={uploadPost}
         disabled={uploading}
       >
-        <Text style={styles.uploadButtonText}>{uploading ? 'Uploading...' : 'Upload'}</Text>
+        <Text style={styles.buttonText}>{uploading ? 'Uploading...' : 'Upload'}</Text>
       </Pressable>
 
       {uploading && <ActivityIndicator size="large" color="blue" />}
@@ -161,7 +159,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center', 
   },
-  heading: {
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
@@ -174,11 +172,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     width: '80%', 
   },
-  uploadButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  pickImageButtonText: {
+  buttonText: {
     color: 'white',
     fontWeight: 'bold',
   },
@@ -189,7 +183,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
 
-  pickImageButton: {
+  imageButton: {
     backgroundColor: 'green',
     padding: 12,
     borderRadius: 8,

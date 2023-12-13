@@ -41,8 +41,15 @@ const NavigationStack: React.FC = () => {
           options={{ headerShown: false }} 
           />
         )}
-        <Stack.Screen name="Home" component={HomePage} />
-        <Stack.Screen name="Details" component={DetailPage} />
+        <Stack.Screen 
+        name="Home" component={HomePage} 
+        options={{ headerShown: false }}
+        />
+        
+        <Stack.Screen 
+        name="Details" component={DetailPage} 
+        options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

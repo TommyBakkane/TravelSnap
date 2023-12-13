@@ -67,7 +67,7 @@ const Feed: React.FC = () => {
         )
       );
     } catch (error) {
-      console.error('Error handling like:', error);
+      console.log(error);
     }
   };
 
@@ -102,7 +102,7 @@ const Feed: React.FC = () => {
         )
       );
     } catch (error) {
-      console.error('Error handling like:', error);
+      console.log(error);
     }
   };
 
@@ -114,10 +114,8 @@ const Feed: React.FC = () => {
       const currentUser = getCurrentUser();
   
       if (currentUser) {
-        // Check if the commentText is not empty or only contains whitespace
         if (commentText.trim() === '') {
-          console.log('Comment cannot be empty');
-          return; // Exit the function if the comment is empty
+          return; 
         }
   
         const newComment: Comment = {
@@ -135,7 +133,7 @@ const Feed: React.FC = () => {
         console.log('User not authenticated');
       }
     } catch (error) {
-      console.error('Error adding comment:', error);
+      console.log(error);
     }
   };
 
@@ -162,7 +160,7 @@ const Feed: React.FC = () => {
         )
       );
     } catch (error) {
-      console.error('Error deleting comment:', error);
+      console.log(error);
     }
   };
 
@@ -223,7 +221,7 @@ const Feed: React.FC = () => {
                 handleComment(item.id, commentText);
                 setCommentText(''); 
               }}
-              style={styles.commentInput}
+              style={styles.input}
             />
       </View>
     )}
@@ -256,7 +254,7 @@ const styles = StyleSheet.create({
       fontSize: 16,
       marginHorizontal: 4,
     },
-    commentInput: {
+    input: {
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
         paddingVertical: 8,
