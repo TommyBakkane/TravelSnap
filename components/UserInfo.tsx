@@ -25,31 +25,22 @@ const UserInfo = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.itemContainer}>
+      <View style={styles.userInfo}>
         <Image
           source={{ uri: user?.photoURL || '' }}
           style={styles.profilePicture}
         />
+        <Text style={styles.usernameText}>{user?.displayName}</Text>
       </View>
 
-      <View style={styles.spacing} />
+
 
       <View style={styles.itemContainer}>
-        <View style={styles.userInfo}>
-          <Text style={styles.usernameText}>{user?.displayName}</Text>
           <Pressable onPress={toggleSettingsModal}>
             <Icon name="cog" size={25} color="#000" style={styles.icon} />
           </Pressable>
-        </View>
-      </View>
-
-      <View style={styles.spacing} />
-
-      <View style={styles.itemContainer}>
         <SignOut />
       </View>
-
-      <View style={styles.spacing} />
 
       <Modal
         animationType="slide"
@@ -73,12 +64,17 @@ const UserInfo = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     padding: 16,
   },
-  itemContainer: {
+  userInfo: {
     marginBottom: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+ 
+  },
+  itemContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -87,20 +83,15 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 60,
   },
-  userInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
+  
   usernameText: {
     fontSize: 24,
     fontWeight: 'bold',
     marginVertical: 8,
   },
   icon: {
-    marginLeft: 16,
-  },
-  spacing: {
-    height: 16,
+    marginBottom: 32,
+    fontSize: 32,
   },
   modalContainer: {
     flex: 1,
@@ -122,6 +113,12 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: 'blue',
     fontSize: 16,
+  },
+  setting: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    textAlign: 'center',
   },
 });
 

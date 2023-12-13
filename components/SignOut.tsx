@@ -1,10 +1,8 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { getAuth, signOut } from 'firebase/auth';
-import { useNavigation } from '@react-navigation/native';
 
 const SignOut = () => {
-const navigation = useNavigation();
 
 const handleSignOut = async () => {
     const auth = getAuth();

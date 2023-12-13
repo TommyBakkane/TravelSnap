@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, ActivityIndicator, Image, Pressable } from 'react-native';
 import { FIREBASE_APP, FIRESTORE_DB } from '../config/firebase';
 import { getStorage} from 'firebase/storage';
 import { addDoc, collection } from 'firebase/firestore';
@@ -14,7 +14,6 @@ const UploadPost = () => {
   const [caption, setCaption] = useState('');
   const [uploading, setUploading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [location, setLocation] = useState<Location.LocationObject | null>(null);
 
   const auth = getAuth();
   
@@ -129,21 +128,23 @@ const UploadPost = () => {
 
       {selectedImage && <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200, marginBottom: 12 }} />}
 
-      <TouchableOpacity style={styles.pickImageButton} onPress={pickImage}>
+      <View style={styles.buttonContainer}>
+      <Pressable style={styles.pickImageButton} onPress={pickImage}>
         <Text style={styles.pickImageButtonText}>Pick an Image</Text>
-      </TouchableOpacity>
+      </Pressable>
 
-      <TouchableOpacity style={styles.pickImageButton} onPress={takePicture}>
+      <Pressable style={styles.pickImageButton} onPress={takePicture}>
         <Text style={styles.pickImageButtonText}>Take a Picture</Text>
-      </TouchableOpacity>
+      </Pressable>
+      </View>
 
-      <TouchableOpacity
+      <Pressable
         style={[styles.uploadButton, { opacity: uploading ? 0.5 : 1 }]}
         onPress={uploadPost}
         disabled={uploading}
       >
         <Text style={styles.uploadButtonText}>{uploading ? 'Uploading...' : 'Upload'}</Text>
-      </TouchableOpacity>
+      </Pressable>
 
       {uploading && <ActivityIndicator size="large" color="blue" />}
     </View>
@@ -170,29 +171,37 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     width: '80%', 
   },
-  uploadButton: {
-    backgroundColor: 'blue',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    width: '80%', 
-    marginTop: 12, 
-  },
   uploadButtonText: {
     color: 'white',
     fontWeight: 'bold',
   },
+  pickImageButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginTop: 12,
+  },
+
   pickImageButton: {
     backgroundColor: 'green',
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
-    width: '80%', 
-    marginTop: 12, 
+    flex: 1, 
+    marginHorizontal: 6,
   },
-  pickImageButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
+
+  uploadButton: {
+    backgroundColor: 'blue',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '100%',
+    marginTop: 12,
   },
 });
 

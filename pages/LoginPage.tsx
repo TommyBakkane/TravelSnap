@@ -51,7 +51,7 @@ const LoginPage: React.FC = () => {
 
     return (
         <View style={styles.container}>
-            <KeyboardAvoidingView behavior="padding">
+            <KeyboardAvoidingView >
                 <TextInput value={email} style={styles.input} placeholder="Email" autoCapitalize="none" onChangeText={(text) => setEmail(text)}></TextInput>
                 <TextInput value={password} style={styles.input} placeholder="Password" autoCapitalize="none" onChangeText={(text) => setPassword(text)} secureTextEntry={true}></TextInput>
 
@@ -98,11 +98,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center'
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold'
+        justifyContent: 'center',
+        
     },
     input: {
         marginVertical: 4,

@@ -17,14 +17,12 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'space-between',
       padding: 16,
-      borderBottomWidth: 1,
-      borderBottomColor: '#ccc',
     },
     logo: {
       marginRight: 8,
     },
     title: {
-      fontSize: 24,
+      fontSize: 32,
       fontWeight: "bold",
     }
   });

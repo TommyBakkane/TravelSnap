@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, Image, Pressable } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Image, Pressable } from 'react-native';
 import { getAuth, onAuthStateChanged, updateProfile, User } from 'firebase/auth';
 import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL as getDownloadURLStorage } from 'firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
@@ -10,7 +10,6 @@ interface SettingsProps {
 const Settings: React.FC<SettingsProps> = ({ onClose }) => {
 
   const auth = getAuth();
-  const storage = getStorage();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [newUsername, setNewUsername] = useState<string>('');
@@ -94,18 +93,20 @@ const Settings: React.FC<SettingsProps> = ({ onClose }) => {
             style={styles.input}
           />
 
-          <View style={styles.avatarContainer}>
+          <View style={styles.imageContainer}>
             {selectedImage ? (
-              <Image source={{ uri: selectedImage }} style={styles.avatar} />
+              <Image source={{ uri: selectedImage }} style={styles.image} />
             ) : (
-              avatarUrl && <Image source={{ uri: avatarUrl }} style={styles.avatar} />
+              avatarUrl && <Image source={{ uri: avatarUrl }} style={styles.image} />
             )}
             <Pressable onPress={pickImage}>
-              <Text style={styles.uploadText}>Upload Avatar</Text>
+              <Text style={styles.button}>Upload Avatar</Text>
             </Pressable>
           </View>
 
-          <Button title="Update Profile" onPress={handleUpdateProfile} />
+          <Pressable onPress={handleUpdateProfile} >
+            <Text style={styles.button}>Update Profile</Text>
+          </Pressable>
         </View>
       )}
     </View>
@@ -123,25 +124,32 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 16,
+    textAlign: 'center',
   },
-  avatarContainer: {
+  imageContainer: {
     alignItems: 'center',
     marginBottom: 16,
   },
-  avatar: {
+  image: {
     width: 100,
     height: 100,
     borderRadius: 50,
     marginBottom: 8,
   },
-  uploadText: {
-    color: 'blue',
-    textDecorationLine: 'underline',
+  button: {
+    color: 'white',
+    fontSize: 16,
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: '#3498db',
+    textAlign: 'center',
+    marginTop: 12,
   },
   input: {
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     marginBottom: 16,
+    paddingHorizontal: 8,
     paddingVertical: 8,
     fontSize: 16,
   },
